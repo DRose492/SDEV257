@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Flexbox Row & Column</title>
+  <style>
+    .container {
+      border: 2px solid #333;
+      padding: 10px;
+      margin: 20px;
+      width: 250px;
+      height: 120px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .row {
+      flex-direction: row;      /* children side-by-side */
+    }
+
+    .column {
+      flex-direction: column;   /* children stacked vertically */
+    }
+
+    .child {
+      flex: 1;
+      border: 1px solid #666;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #eee;
+      font-family: sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <h3>Row</h3>
+  <div class="container row">
+    <div class="child">Child</div>
+    <div class="child">Child</div>
+    <div class="child">Child</div>
+  </div>
+
+  <h3>Column</h3>
+  <div class="container column">
+    <div class="child">Child</div>
+    <div class="child">Child</div>
+    <div class="child">Child</div>
+  </div>
+</body>
+</html>
