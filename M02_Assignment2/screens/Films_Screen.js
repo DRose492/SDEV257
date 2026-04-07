@@ -1,9 +1,25 @@
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList, StyleSheet } from 'react-native';
 
 export default function FilmsScreen() {
+  const [films, setFilms] = useState([]);
+
+  useEffect(() => {
+    fetch('https://swapi.dev/api/films/')
+      .then(res => res.json())
+      .then(data => setFilms(data.results))
+      .catch(err => console.error(err));
+  }, []);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Films Screen</Text>
+      <FlatList
+        data={films}
+        keyExtractor={(item) => item.episode_id.toString()}
+        renderItem={({ item }) => (
+          <Text style={styles.text}>{item.title}</Text>
+        )}
+      />
     </View>
   );
 }
@@ -11,10 +27,10 @@ export default function FilmsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    padding: 20,
   },
   text: {
-    fontSize: 24,
+    fontSize: 20,
+    marginBottom: 10,
   },
 });
