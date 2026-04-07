@@ -1,9 +1,25 @@
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList, StyleSheet } from 'react-native';
 
 export default function PlanetsScreen() {
+  const [planets, setPlanets] = useState([]);
+
+  useEffect(() => {
+    fetch('https://swapi.dev/api/planets/')
+      .then(res => res.json())
+      .then(data => setPlanets(data.results))
+      .catch(err => console.error(err));
+  }, []);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Planets Screen</Text>
+      <FlatList
+        data={planets}
+        keyExtractor={(item) => item.name}
+        renderItem={({ item }) => (
+          <Text style={styles.text}>{item.name}</Text>
+        )}
+      />
     </View>
   );
 }
@@ -11,11 +27,10 @@ export default function PlanetsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    padding: 20,
   },
   text: {
-    fontSize: 24,
+    fontSize: 20,
+    marginBottom: 10,
   },
 });
-
