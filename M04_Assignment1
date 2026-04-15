@@ -1,0 +1,54 @@
+import React from "react";
+import { View, StyleSheet } from "react-native";
+import MapView, { Marker } from "react-native-maps";
+
+export default function App() {
+  // Hard‑coded starting location (Ivy Tech Valparaiso)
+  const startingPoint = {
+    latitude: 41.465870,
+    longitude: -87.014610,
+  };
+
+  // Nearby restaurant (2300 Morthland Dr)
+  const restaurant = {
+    latitude: 41.462770,
+    longitude: -87.031020,
+  };
+
+  return (
+    <View style={styles.container}>
+      <MapView
+        style={styles.map}
+        initialRegion={{
+          latitude: startingPoint.latitude,
+          longitude: startingPoint.longitude,
+          latitudeDelta: 0.02,
+          longitudeDelta: 0.02,
+        }}
+      >
+        {/* Starting location marker */}
+        <Marker
+          title="Ivy Tech Valparaiso"
+          description="3100 Ivy Tech Dr"
+          coordinate={startingPoint}
+        />
+
+        {/* Restaurant marker */}
+        <Marker
+          title="Nearby Restaurant"
+          description="2300 Morthland Dr"
+          coordinate={restaurant}
+        />
+      </MapView>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  map: {
+    flex: 1,
+  },
+});
