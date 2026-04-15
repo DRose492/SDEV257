@@ -3,42 +3,48 @@ import { View, StyleSheet } from "react-native";
 import { WebView } from "react-native-webview";
 
 export default function App() {
-  // Ivy Tech Valparaiso
-  const ivyTech = {
-    lat: 41.465870,
-    lng: -87.014610,
-  };
+  const ivyTech = { lat: 41.465870, lng: -87.014610 };
+  const restaurant = { lat: 41.462770, lng: -87.031020 };
 
-  // Nearby restaurant
-  const restaurant = {
-    lat: 41.462770,
-    lng: -87.031020,
-  };
+  const html = `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0">
+        <style>
+          #map { height: 100%; width: 100%; }
+          html, body { height: 100%; margin: 0; padding: 0; }
+        </style>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+      </head>
+      <body>
+        <div id="map"></div>
+        <script>
+          var map = L.map('map').setView([${ivyTech.lat}, ${ivyTech.lng}], 13);
 
-  // Google Maps embed URL with two markers
-  const mapUrl = `
-    https://www.google.com/maps/embed/v1/directions
-      ?key=YOUR_API_KEY
-      &origin=${ivyTech.lat},${ivyTech.lng}
-      &destination=${restaurant.lat},${restaurant.lng}
-      &zoom=14
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+          }).addTo(map);
+
+          L.marker([${ivyTech.lat}, ${ivyTech.lng}]).addTo(map)
+            .bindPopup('Ivy Tech Valparaiso');
+
+          L.marker([${restaurant.lat}, ${restaurant.lng}]).addTo(map)
+            .bindPopup('Nearby Restaurant');
+        </script>
+      </body>
+    </html>
   `;
 
   return (
     <View style={styles.container}>
-      <WebView
-        source={{ uri: mapUrl }}
-        style={styles.map}
-      />
+      <WebView originWhitelist={['*']} source={{ html }} style={styles.map} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  map: {
-    flex: 1,
-  },
+  container: { flex: 1 },
+  map: { flex: 1 },
 });
