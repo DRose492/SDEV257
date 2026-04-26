@@ -5,6 +5,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import PlanetsScreen from './screens/PlanetsScreen';
 import FilmsScreen from './screens/FilmsScreen';
 import SpaceshipsScreen from './screens/SpaceshipsScreen';
+import NetworkGuard from './NetworkGuard';
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -31,8 +32,10 @@ function AndroidNavigator() {
 
 export default function App() {
   return (
-    <NavigationContainer>
-      {Platform.OS === 'ios' ? <IOSNavigator /> : <AndroidNavigator />}
-    </NavigationContainer>
+    <NetworkGuard>
+      <NavigationContainer>
+        {Platform.OS === 'ios' ? <IOSNavigator /> : <AndroidNavigator />}
+      </NavigationContainer>
+    </NetworkGuard>
   );
 }
