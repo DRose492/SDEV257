@@ -2,9 +2,9 @@ import { Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import PlanetsScreen from './screens/PlanetsScreen';
-import FilmsScreen from './screens/FilmsScreen';
-import SpaceshipsScreen from './screens/SpaceshipsScreen';
+import PlanetsScreen from './screens/Planets_Screen';
+import FilmsScreen from './screens/Films_Screen';
+import SpaceshipsScreen from './screens/Spaceships_Screen';
 import NetworkGuard from './NetworkGuard';
 
 const Tab = createBottomTabNavigator();
