@@ -4,8 +4,6 @@ import {
   Text, 
   StyleSheet, 
   TextInput, 
-  Button, 
-  Modal, 
   ScrollView, 
   TouchableOpacity,
   Image
@@ -13,16 +11,11 @@ import {
 import { Swipeable } from 'react-native-gesture-handler';
 import Animated, { FadeIn } from 'react-native-reanimated';
 
-// ⭐ Local Radiant VII image (WEBP)
 import RadiantVII from '../assets/RadiantVII.webp';
 
 export default function SpaceshipsScreen() {
   const [ships, setShips] = useState([]);
   const [searchText, setSearchText] = useState("");
-  const [modalVisible, setModalVisible] = useState(false);
-  const [selectedShip, setSelectedShip] = useState("");
-
-  // ⭐ Lazy-load image state
   const [imageLoaded, setImageLoaded] = useState(false);
 
   useEffect(() => {
@@ -31,7 +24,6 @@ export default function SpaceshipsScreen() {
       .then(data => setShips(data.results))
       .catch(err => console.error(err));
 
-    // ⭐ Simulated lazy-load delay
     const timer = setTimeout(() => {
       setImageLoaded(true);
     }, 500);
@@ -39,10 +31,9 @@ export default function SpaceshipsScreen() {
     return () => clearTimeout(timer);
   }, []);
 
-  const handleSwipe = (name) => {
-    setSelectedShip(name);
-    setModalVisible(true);
-  };
+  const filteredShips = ships.filter(ship =>
+    ship.name.toLowerCase().includes(searchText.toLowerCase())
+  );
 
   const renderRightActions = () => {
     return (
@@ -55,7 +46,6 @@ export default function SpaceshipsScreen() {
   return (
     <View style={styles.container}>
 
-      {/* ⭐ Lazy-loaded Radiant VII image */}
       {imageLoaded && (
         <Image
           source={RadiantVII}
@@ -71,38 +61,12 @@ export default function SpaceshipsScreen() {
         onChangeText={setSearchText}
       />
 
-      <Button 
-        title="Submit" 
-        onPress={() => {
-          setSelectedShip(searchText);
-          setModalVisible(true);
-        }} 
-      />
-
-      <Modal
-        visible={modalVisible}
-        transparent={true}
-        animationType="slide"
-      >
-        <View style={styles.modalBackground}>
-          <View style={styles.modalBox}>
-            <Text style={styles.modalText}>You selected:</Text>
-            <Text style={styles.modalValue}>{selectedShip}</Text>
-
-            <Button 
-              title="Close" 
-              onPress={() => setModalVisible(false)} 
-            />
-          </View>
-        </View>
-      </Modal>
-
       <ScrollView style={{ marginTop: 20 }}>
-        {ships.map((item) => (
+        {filteredShips.map((item) => (
           <Swipeable
             key={item.name}
             renderRightActions={renderRightActions}
-            onSwipeableOpen={() => handleSwipe(item.name)}
+            onSwipeableOpen={() => console.log("Swiped:", item.name)}
           >
             <Animated.View entering={FadeIn}>
               <TouchableOpacity>
@@ -151,27 +115,5 @@ const styles = StyleSheet.create({
   swipeText: {
     color: "white",
     fontWeight: "bold",
-  },
-  modalBackground: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)",
-  },
-  modalBox: {
-    width: "80%",
-    padding: 20,
-    backgroundColor: "white",
-    borderRadius: 10,
-    alignItems: "center",
-  },
-  modalText: {
-    fontSize: 18,
-    marginBottom: 10,
-  },
-  modalValue: {
-    fontSize: 22,
-    fontWeight: "bold",
-    marginBottom: 20,
   },
 });
