@@ -13,7 +13,7 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 
 import Maul from '../assets/Maul.webp';
 
-export default function FilmsScreen() {
+export default function Films_Screen({ navigation }) {
   const [films, setFilms] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -52,6 +52,7 @@ export default function FilmsScreen() {
       <TextInput
         style={styles.input}
         placeholder="Search films..."
+        placeholderTextColor="#FFE81F"
         value={searchText}
         onChangeText={setSearchText}
       />
@@ -61,10 +62,12 @@ export default function FilmsScreen() {
           <Swipeable
             key={item.episode_id}
             renderRightActions={renderRightActions}
-            onSwipeableOpen={() => console.log("Swiped:", item.title)}
+            onSwipeableOpen={() =>
+              navigation.navigate("FilmDetail", { item })
+            }
           >
             <Animated.View entering={FadeIn}>
-              <TouchableOpacity>
+              <TouchableOpacity style={styles.card}>
                 <Text style={styles.text}>{item.title}</Text>
               </TouchableOpacity>
             </Animated.View>
@@ -79,6 +82,7 @@ export default function FilmsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#0d0d0d",
     padding: 20,
   },
   headerImage: {
@@ -86,29 +90,42 @@ const styles = StyleSheet.create({
     height: 180,
     borderRadius: 10,
     marginBottom: 15,
+    borderWidth: 1,
+    borderColor: "#4da6ff",
   },
   input: {
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: "#4da6ff",
     padding: 10,
     marginBottom: 10,
     borderRadius: 6,
+    color: "#f2f2f2",
+    backgroundColor: "#1a1a1a",
+  },
+  card: {
+    backgroundColor: "#1a1a1a",
+    padding: 15,
+    marginBottom: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#4da6ff",
+    shadowColor: "#4da6ff",
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
   },
   text: {
     fontSize: 20,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderColor: "#ddd",
+    color: "#f2f2f2",
   },
   swipeBox: {
-    backgroundColor: "#007bff",
+    backgroundColor: "#4da6ff",
     justifyContent: "center",
     alignItems: "center",
     width: 80,
     height: "100%",
   },
   swipeText: {
-    color: "white",
+    color: "#0d0d0d",
     fontWeight: "bold",
   },
 });
