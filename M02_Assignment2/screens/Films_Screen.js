@@ -4,8 +4,6 @@ import {
   Text, 
   StyleSheet, 
   TextInput, 
-  Button, 
-  Modal, 
   ScrollView, 
   TouchableOpacity,
   Image
@@ -13,16 +11,11 @@ import {
 import { Swipeable } from 'react-native-gesture-handler';
 import Animated, { FadeIn } from 'react-native-reanimated';
 
-// ⭐ Local Darth Maul WEBP image
 import Maul from '../assets/Maul.webp';
 
 export default function FilmsScreen() {
   const [films, setFilms] = useState([]);
   const [searchText, setSearchText] = useState("");
-  const [modalVisible, setModalVisible] = useState(false);
-  const [selectedFilm, setSelectedFilm] = useState("");
-
-  // ⭐ Lazy-load image state
   const [imageLoaded, setImageLoaded] = useState(false);
 
   useEffect(() => {
@@ -31,31 +24,23 @@ export default function FilmsScreen() {
       .then(data => setFilms(data.results))
       .catch(err => console.error(err));
 
-    // ⭐ Simulated lazy-load delay
-    const timer = setTimeout(() => {
-      setImageLoaded(true);
-    }, 500);
-
+    const timer = setTimeout(() => setImageLoaded(true), 500);
     return () => clearTimeout(timer);
   }, []);
 
-  const handleSwipe = (title) => {
-    setSelectedFilm(title);
-    setModalVisible(true);
-  };
+  const filteredFilms = films.filter(film =>
+    film.title.toLowerCase().includes(searchText.toLowerCase())
+  );
 
-  const renderRightActions = () => {
-    return (
-      <View style={styles.swipeBox}>
-        <Text style={styles.swipeText}>Open</Text>
-      </View>
-    );
-  };
+  const renderRightActions = () => (
+    <View style={styles.swipeBox}>
+      <Text style={styles.swipeText}>Open</Text>
+    </View>
+  );
 
   return (
     <View style={styles.container}>
 
-      {/* ⭐ Lazy-loaded Darth Maul image */}
       {imageLoaded && (
         <Image
           source={Maul}
@@ -71,38 +56,12 @@ export default function FilmsScreen() {
         onChangeText={setSearchText}
       />
 
-      <Button 
-        title="Submit" 
-        onPress={() => {
-          setSelectedFilm(searchText);
-          setModalVisible(true);
-        }} 
-      />
-
-      <Modal
-        visible={modalVisible}
-        transparent={true}
-        animationType="slide"
-      >
-        <View style={styles.modalBackground}>
-          <View style={styles.modalBox}>
-            <Text style={styles.modalText}>You selected:</Text>
-            <Text style={styles.modalValue}>{selectedFilm}</Text>
-
-            <Button 
-              title="Close" 
-              onPress={() => setModalVisible(false)} 
-            />
-          </View>
-        </View>
-      </Modal>
-
       <ScrollView style={{ marginTop: 20 }}>
-        {films.map((item) => (
+        {filteredFilms.map((item) => (
           <Swipeable
             key={item.episode_id}
             renderRightActions={renderRightActions}
-            onSwipeableOpen={() => handleSwipe(item.title)}
+            onSwipeableOpen={() => console.log("Swiped:", item.title)}
           >
             <Animated.View entering={FadeIn}>
               <TouchableOpacity>
@@ -151,27 +110,5 @@ const styles = StyleSheet.create({
   swipeText: {
     color: "white",
     fontWeight: "bold",
-  },
-  modalBackground: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)",
-  },
-  modalBox: {
-    width: "80%",
-    padding: 20,
-    backgroundColor: "white",
-    borderRadius: 10,
-    alignItems: "center",
-  },
-  modalText: {
-    fontSize: 18,
-    marginBottom: 10,
-  },
-  modalValue: {
-    fontSize: 22,
-    fontWeight: "bold",
-    marginBottom: 20,
   },
 });
